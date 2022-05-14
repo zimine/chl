@@ -1,1 +1,3 @@
-# chl
+This tutorial is to introduce computational phylogenetics and relevant hands-on practice. It is largely inspired by Prof. Andrew Garrett's class (*LING230 Advanced Historical Linguistics*) and Edwin Ko's work on Siouan. I am deeply grateful to both of them. All errors are my own. 
+
+This tutorial is written in Markdown with template adpated from Hongtao Hao. It is licensed under the [Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License](http://creativecommons.org/licenses/by-nc-sa/4.0/). You can find the full source of this project at [https://github.com/zimine/chl](https://github.com/zimine/chl).

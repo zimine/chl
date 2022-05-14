@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Computational Phylogenetics: A Hands-on Tutorial</title>
+  <meta name="description" content="This notebook includes a brief introductory to computational phylogenetics and a tutorial of implementing related methods." />
+  <meta name="generator" content="bookdown 0.26 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Computational Phylogenetics: A Hands-on Tutorial" />
+  <meta property="og:type" content="book" />
+  
+  <meta property="og:description" content="This notebook includes a brief introductory to computational phylogenetics and a tutorial of implementing related methods." />
+  <meta name="github-repo" content="https://github.com/zimine/chl" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Computational Phylogenetics: A Hands-on Tutorial" />
+  
+  <meta name="twitter:description" content="This notebook includes a brief introductory to computational phylogenetics and a tutorial of implementing related methods." />
+  
+
+<meta name="author" content="Mingyu Yuan" />
+
+
+<meta name="date" content="2022-05-13" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+
+<link rel="next" href="overview.html"/>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+/* Used with Pandoc 2.11+ new --citeproc when CSL is used */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">Computational Phylogenetics</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Welcome</a></li>
+<li class="chapter" data-level="1" data-path="overview.html"><a href="overview.html"><i class="fa fa-check"></i><b>1</b> Overview</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="overview.html"><a href="overview.html#the-first-wave"><i class="fa fa-check"></i><b>1.1</b> The first wave</a></li>
+<li class="chapter" data-level="1.2" data-path="overview.html"><a href="overview.html#bayesian-phylogenetics"><i class="fa fa-check"></i><b>1.2</b> Bayesian phylogenetics</a></li>
+<li class="chapter" data-level="1.3" data-path="overview.html"><a href="overview.html#other-appraoches"><i class="fa fa-check"></i><b>1.3</b> Other appraoches</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="bascis.html"><a href="bascis.html"><i class="fa fa-check"></i><b>2</b> Bascis</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="bascis.html"><a href="bascis.html#trait-selection"><i class="fa fa-check"></i><b>2.1</b> Trait selection</a>
+<ul>
+<li class="chapter" data-level="2.1.1" data-path="bascis.html"><a href="bascis.html#lexical-traits"><i class="fa fa-check"></i><b>2.1.1</b> Lexical traits</a></li>
+<li class="chapter" data-level="2.1.2" data-path="bascis.html"><a href="bascis.html#typological-traits"><i class="fa fa-check"></i><b>2.1.2</b> Typological traits</a></li>
+</ul></li>
+<li class="chapter" data-level="2.2" data-path="bascis.html"><a href="bascis.html#data-curation"><i class="fa fa-check"></i><b>2.2</b> Data curation</a>
+<ul>
+<li class="chapter" data-level="2.2.1" data-path="bascis.html"><a href="bascis.html#coding-scheme"><i class="fa fa-check"></i><b>2.2.1</b> Coding scheme</a></li>
+<li class="chapter" data-level="2.2.2" data-path="bascis.html"><a href="bascis.html#data-format"><i class="fa fa-check"></i><b>2.2.2</b> Data format</a></li>
+</ul></li>
+<li class="chapter" data-level="2.3" data-path="bascis.html"><a href="bascis.html#databases-and-resources"><i class="fa fa-check"></i><b>2.3</b> Databases and resources</a>
+<ul>
+<li class="chapter" data-level="2.3.1" data-path="bascis.html"><a href="bascis.html#data-scarcity"><i class="fa fa-check"></i><b>2.3.1</b> Data scarcity</a></li>
+<li class="chapter" data-level="2.3.2" data-path="bascis.html"><a href="bascis.html#available-resources"><i class="fa fa-check"></i><b>2.3.2</b> Available resources</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="implementation.html"><a href="implementation.html"><i class="fa fa-check"></i><b>3</b> Implementation</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="implementation.html"><a href="implementation.html#beastling"><i class="fa fa-check"></i><b>3.1</b> BEASTling</a></li>
+<li class="chapter" data-level="3.2" data-path="implementation.html"><a href="implementation.html#phylogeny-of-siouan"><i class="fa fa-check"></i><b>3.2</b> Phylogeny of Siouan</a>
+<ul>
+<li class="chapter" data-level="3.2.1" data-path="implementation.html"><a href="implementation.html#pre-processing"><i class="fa fa-check"></i><b>3.2.1</b> Pre-processing</a></li>
+<li class="chapter" data-level="3.2.2" data-path="implementation.html"><a href="implementation.html#installation"><i class="fa fa-check"></i><b>3.2.2</b> Installation</a></li>
+<li class="chapter" data-level="3.2.3" data-path="implementation.html"><a href="implementation.html#analysis"><i class="fa fa-check"></i><b>3.2.3</b> Analysis</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Computational Phylogenetics: A Hands-on Tutorial</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="header">
+<h1 class="title">Computational Phylogenetics: A Hands-on Tutorial</h1>
+<p class="author"><em>Mingyu Yuan</em></p>
+<p class="date"><em>2022-05-13</em></p>
+</div>
+<div id="welcome" class="section level1 unnumbered hasAnchor">
+<h1>Welcome<a href="index.html#welcome" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<p>👋 Hi! This tutorial is largely inspired by <a href="http://linguistics.berkeley.edu/~garrett/">Prof. Andrew Garrett</a>’s class (<em>LING230 Advanced Historical Linguistics, Spring 2022</em>) and <a href="http://eddersko.com/">Edwin Ko</a>’s past and current work on computational phylogenetics. I am deeply grateful to both of them. All errors are my own.</p>
+<p>The purposes of this tutorial are three-fold. First, to briefly summarize the past and present of computational phylogenetics, providing an overview of computatioanl methods applied in this line of research. Second, to introduce Bayesian phylogenetics and relevant details, including trait selection, data format and coding scheme, and existing software and packages. Lastly, to give a step-by-step tutorial of implementing Bayesian-MCMC method in command lines with Beastling. <span class="citation">Ko (<a href="#ref-ko2021" role="doc-biblioref">2021</a>)</span>’s analysis of the phylogeny of Siouan is reproduced in Section 3.</p>
+<p>This tutorial does require basic understandings of historical linguistic terms, though wiki links or relevant introductory materials are provided whenever a term is mentioned. This tutorial does not assume or require any programming background though. The .R file used to preprocess data is available in the project repository. Command line basics are introduced in Section 3.</p>
+<p>This tutorial is written in Markdown and compiled by Bookdown. It is licensed under the <a href="http://creativecommons.org/licenses/by-nc-sa/4.0/">Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License</a>. You can find the full source of this project at <a href="https://github.com/zimine/chl">https://github.com/zimine/chl</a>.</p>
+<p>Notes:</p>
+<ol style="list-style-type: decimal">
+<li>I use traits, features, and characters interchangeably throughout the tutorial.</li>
+<li>The first two sections are highly-condensed summaries of computational phylogenetics. See <span class="citation">Nichols and Warnow (<a href="#ref-nichols2008" role="doc-biblioref">2008</a>)</span>, <span class="citation">Dunn (<a href="#ref-dunn2015" role="doc-biblioref">2015</a>)</span>, <span class="citation">Bowern (<a href="#ref-bowern2018" role="doc-biblioref">2018</a>)</span>, and <span class="citation">Jäger (<a href="#ref-jager2019" role="doc-biblioref">2019</a>)</span> for general introductions to computational phylogenetics; also see <span class="citation">Hoffmann et al. (<a href="#ref-hoffmann2021" role="doc-biblioref">2021</a>)</span> for a tutorial of implementing Bayesian phylogenetcis in BEAST.</li>
+</ol>
+
+</div>
+<h3>References<a href="references.html#references" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-bowern2018" class="csl-entry">
+———. 2018. <span>“Computational Phylogenetics.”</span> <em>Annual Review of Linguistics</em> 4: 281–96.
+</div>
+<div id="ref-dunn2015" class="csl-entry">
+Dunn, Michael. 2015. <span>“Language Phylogenies.”</span> <em>The Routledge Handbook of Historical Linguistics</em>, 190–211.
+</div>
+<div id="ref-hoffmann2021" class="csl-entry">
+Hoffmann, Konstantin, Remco Bouckaert, Simon J Greenhill, and Denise Kühnert. 2021. <span>“Bayesian Phylogenetic Analysis of Linguistic Data Using BEAST.”</span> <em>Journal of Language Evolution</em> 6 (2): 119–35.
+</div>
+<div id="ref-jager2019" class="csl-entry">
+Jäger, Gerhard. 2019. <span>“Computational Historical Linguistics.”</span> <em>Theoretical Linguistics</em> 45 (3-4): 151–82.
+</div>
+<div id="ref-ko2021" class="csl-entry">
+Ko, Edwin. 2021. <span>“A Bayesian Phylogenetic Study of the Siouan Language Family Using Typological Data.”</span> <a href="http://eddersko.com/assets/KoSCLC41Slides.pdf">http://eddersko.com/assets/KoSCLC41Slides.pdf</a>.
+</div>
+<div id="ref-nichols2008" class="csl-entry">
+Nichols, Johanna, and Tandy Warnow. 2008. <span>“Tutorial on Computational Linguistic Phylogeny.”</span> <em>Language and Linguistics Compass</em> 2 (5): 760–820.
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+
+<a href="overview.html" class="navigation navigation-next navigation-unique" aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": "https://github.com/zimine/chl/edit/BRANCH/index.Rmd",
+"text": "Edit"
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["_main.pdf", "_main.epub"],
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

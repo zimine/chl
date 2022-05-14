@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>2 Bascis | Computational Phylogenetics: A Hands-on Tutorial</title>
+  <meta name="description" content="This notebook includes a brief introductory to computational phylogenetics and a tutorial of implementing related methods." />
+  <meta name="generator" content="bookdown 0.26 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="2 Bascis | Computational Phylogenetics: A Hands-on Tutorial" />
+  <meta property="og:type" content="book" />
+  
+  <meta property="og:description" content="This notebook includes a brief introductory to computational phylogenetics and a tutorial of implementing related methods." />
+  <meta name="github-repo" content="https://github.com/zimine/chl" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="2 Bascis | Computational Phylogenetics: A Hands-on Tutorial" />
+  
+  <meta name="twitter:description" content="This notebook includes a brief introductory to computational phylogenetics and a tutorial of implementing related methods." />
+  
+
+<meta name="author" content="Mingyu Yuan" />
+
+
+<meta name="date" content="2022-05-13" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="overview.html"/>
+<link rel="next" href="implementation.html"/>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+/* Used with Pandoc 2.11+ new --citeproc when CSL is used */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">Computational Phylogenetics</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Welcome</a></li>
+<li class="chapter" data-level="1" data-path="overview.html"><a href="overview.html"><i class="fa fa-check"></i><b>1</b> Overview</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="overview.html"><a href="overview.html#the-first-wave"><i class="fa fa-check"></i><b>1.1</b> The first wave</a></li>
+<li class="chapter" data-level="1.2" data-path="overview.html"><a href="overview.html#bayesian-phylogenetics"><i class="fa fa-check"></i><b>1.2</b> Bayesian phylogenetics</a></li>
+<li class="chapter" data-level="1.3" data-path="overview.html"><a href="overview.html#other-appraoches"><i class="fa fa-check"></i><b>1.3</b> Other appraoches</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="bascis.html"><a href="bascis.html"><i class="fa fa-check"></i><b>2</b> Bascis</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="bascis.html"><a href="bascis.html#trait-selection"><i class="fa fa-check"></i><b>2.1</b> Trait selection</a>
+<ul>
+<li class="chapter" data-level="2.1.1" data-path="bascis.html"><a href="bascis.html#lexical-traits"><i class="fa fa-check"></i><b>2.1.1</b> Lexical traits</a></li>
+<li class="chapter" data-level="2.1.2" data-path="bascis.html"><a href="bascis.html#typological-traits"><i class="fa fa-check"></i><b>2.1.2</b> Typological traits</a></li>
+</ul></li>
+<li class="chapter" data-level="2.2" data-path="bascis.html"><a href="bascis.html#data-curation"><i class="fa fa-check"></i><b>2.2</b> Data curation</a>
+<ul>
+<li class="chapter" data-level="2.2.1" data-path="bascis.html"><a href="bascis.html#coding-scheme"><i class="fa fa-check"></i><b>2.2.1</b> Coding scheme</a></li>
+<li class="chapter" data-level="2.2.2" data-path="bascis.html"><a href="bascis.html#data-format"><i class="fa fa-check"></i><b>2.2.2</b> Data format</a></li>
+</ul></li>
+<li class="chapter" data-level="2.3" data-path="bascis.html"><a href="bascis.html#databases-and-resources"><i class="fa fa-check"></i><b>2.3</b> Databases and resources</a>
+<ul>
+<li class="chapter" data-level="2.3.1" data-path="bascis.html"><a href="bascis.html#data-scarcity"><i class="fa fa-check"></i><b>2.3.1</b> Data scarcity</a></li>
+<li class="chapter" data-level="2.3.2" data-path="bascis.html"><a href="bascis.html#available-resources"><i class="fa fa-check"></i><b>2.3.2</b> Available resources</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="implementation.html"><a href="implementation.html"><i class="fa fa-check"></i><b>3</b> Implementation</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="implementation.html"><a href="implementation.html#beastling"><i class="fa fa-check"></i><b>3.1</b> BEASTling</a></li>
+<li class="chapter" data-level="3.2" data-path="implementation.html"><a href="implementation.html#phylogeny-of-siouan"><i class="fa fa-check"></i><b>3.2</b> Phylogeny of Siouan</a>
+<ul>
+<li class="chapter" data-level="3.2.1" data-path="implementation.html"><a href="implementation.html#pre-processing"><i class="fa fa-check"></i><b>3.2.1</b> Pre-processing</a></li>
+<li class="chapter" data-level="3.2.2" data-path="implementation.html"><a href="implementation.html#installation"><i class="fa fa-check"></i><b>3.2.2</b> Installation</a></li>
+<li class="chapter" data-level="3.2.3" data-path="implementation.html"><a href="implementation.html#analysis"><i class="fa fa-check"></i><b>3.2.3</b> Analysis</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Computational Phylogenetics: A Hands-on Tutorial</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="bascis" class="section level1 hasAnchor" number="2">
+<h1><span class="header-section-number">2</span> Bascis<a href="bascis.html#bascis" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<div id="trait-selection" class="section level2 hasAnchor" number="2.1">
+<h2><span class="header-section-number">2.1</span> Trait selection<a href="bascis.html#trait-selection" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="lexical-traits" class="section level3 hasAnchor" number="2.1.1">
+<h3><span class="header-section-number">2.1.1</span> Lexical traits<a href="bascis.html#lexical-traits" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Similar to the comparative method, Bayesian phylogenetics rely on lexical, phonological, morphological, syntactic, and typological data to infer linguistic phylogenies. The comparative method often draws inferences from other data types (e.g. sound correspondences or morphological paradigms) as they are more representative, conclusive, and trusted. Bayesian phylogenetics mostly focuses on lexical and/or typological traits. Morphological and phonological traits are often interdependent, thus unsuited for statistical analysis <span class="citation">(<a href="#ref-chang2015" role="doc-biblioref">Chang et al. 2015</a>)</span>. The lexicon or vocabulary would often be the first choice when it comes to Bayesian phylogenetics, partly due to data availability issue. There are three major concerns regarding using lexical traits to infer linguistic phylogeneies.</p>
+<p>First, the term lexical traits is in fact not accurate, neither does cognate set. In a typical cognate set, we would see each slot occupied by lexeme in each language. However, what fed into phylogenetic analysis is not lexeme but cognate relationship with cognacy coded as 0s and 1s in the data. The binary or multi-state matrix might not be fully representative of a cognate set.</p>
+<p>Second, this kind of dataset is often based on <em>root-meaning traits</em>, which require shared meanings; the forms or roots can vary. For instance, English <em>feather</em> and Latin <em>penna</em> share the trait of PIE <em>*pet</em> (<em>to fly</em>) but are not cognates as they do not descend from the same word (<em>feather</em> &gt; <em>*pet-tra</em> vs. <em>penna</em> &gt; <em>*pet-na</em>) <span class="citation">(<a href="#ref-chang2015" role="doc-biblioref">Chang et al. 2015</a>)</span>. Cognates, on the other hand, do not necessarily require shared meanings but do require descendance from the common proto-form. For example, English <em>rain</em> and German <em>Regen</em> are considered cognates because both descend from the proto-Germanic <em>*regna</em> <span class="citation">(<a href="#ref-greenhill2020" role="doc-biblioref">Greenhill, Heggarty, and Gray 2020</a>)</span>. Motivations underlying cognate traits and root-meaning traits are different. Cognate traits are used to investigate descendance from common ancestral forms, during which semantic shifts may occur, giving rise to cogante words with different meanings. On the other hand, root-meaning traits arise in languages due to multiple reasons. Semantic shift may cause words to have the same meanings but different forms, so does derivational shift—certain roots are well suited to innovate derivatives; and this process may occur independently within language (i.e. homoplasy<a href="#fn5" class="footnote-ref" id="fnref5"><sup>5</sup></a>).</p>
+<p>Lastly, selecting cognates based on meanings does not mean any arbitrary semantic units present in the language. Meanings here largely refer to the core vocabulary (i.e. Swadesh list), which is assumed to be universal and consistent across languages and resistant to change. That being said, it is not necessarily true that the core vocabulary is borrowing-free <span class="citation">(<a href="#ref-greenhill2020" role="doc-biblioref">Greenhill, Heggarty, and Gray 2020</a>)</span>.</p>
+<p>To sum up, lexical traits may be subject to the limitations of core vocabulary and its conversion to binary data. More often is the case that cognate traits and root-meaning traits are mixed in the dataset. Assigning cognacy properly thus becomes the first and biggest question of using lexical traits.</p>
+</div>
+<div id="typological-traits" class="section level3 hasAnchor" number="2.1.2">
+<h3><span class="header-section-number">2.1.2</span> Typological traits<a href="bascis.html#typological-traits" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Typological traits do share the same drawback of being interdependent; however, they could provide us with language-specific information as well as cross-linguistic generalizations. <em>Typological</em> traits can be loosely defined as any features relevant to the language’s internal structure, for instance, word order and morphosyntactic alignment. Sometimes linguists also extend beyond conventionally defined typological features and include lexico-semantic information. Unlike vocabulary, which is susceptible to borrowing, typological features are believed to be resistant to borrowing. Typological characters are by definition homoplastic <span class="citation">(<a href="#ref-nichols2008" role="doc-biblioref">Nichols and Warnow 2008</a>)</span>. They are derived directly from the grammar. The same typological character (e.g. glottalized consonants and tone system) is more likely to evolve independently in each language <span class="citation">(<a href="#ref-nichols2008" role="doc-biblioref">Nichols and Warnow 2008</a>)</span><a href="#fn6" class="footnote-ref" id="fnref6"><sup>6</sup></a>.</p>
+</div>
+</div>
+<div id="data-curation" class="section level2 hasAnchor" number="2.2">
+<h2><span class="header-section-number">2.2</span> Data curation<a href="bascis.html#data-curation" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="coding-scheme" class="section level3 hasAnchor" number="2.2.1">
+<h3><span class="header-section-number">2.2.1</span> Coding scheme<a href="bascis.html#coding-scheme" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Whatever linguistic traits are selected, they are translated to numbers before being fed into phylogenetic analysis. The following table shows the coding of lexical traits (Coastal Sepik)<a href="#fn7" class="footnote-ref" id="fnref7"><sup>7</sup></a>. For instance, if meaning <em>one</em> is present in the language, then it will be assigned a number; cognacy is indicated by the same numbers. Sepa, Manam, and Kairiru are coded <em>1</em> for this trait, then they would not be assigned to a second number.</p>
+<table>
+<thead>
+<tr class="header">
+<th align="center">Sepa</th>
+<th align="center">Manam</th>
+<th align="center">Kairiru</th>
+<th align="center">Sera</th>
+<th align="center">Gloss</th>
+<th align="center">Coding</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center">teka</td>
+<td align="center">teke</td>
+<td align="center">tai</td>
+<td align="center">pontenen</td>
+<td align="center">‘one’</td>
+<td align="center">1, 1, 1, 2</td>
+</tr>
+<tr class="even">
+<td align="center">lua</td>
+<td align="center">rua</td>
+<td align="center">wulu</td>
+<td align="center">eltiŋ</td>
+<td align="center">‘two’</td>
+<td align="center">3, 3, 4, 5</td>
+</tr>
+<tr class="odd">
+<td align="center">toli</td>
+<td align="center">toli</td>
+<td align="center">tuol</td>
+<td align="center">eltiŋ pal</td>
+<td align="center">‘three’</td>
+<td align="center">6, 6, 6, 7</td>
+</tr>
+<tr class="even">
+<td align="center">wati</td>
+<td align="center">wati</td>
+<td align="center">viat</td>
+<td align="center">eltiŋ eltiŋ</td>
+<td align="center">‘four’</td>
+<td align="center">8, 8, 8, 9</td>
+</tr>
+</tbody>
+</table>
+<p>When it comes to phonological, morphological, and typological features, traits are often translated to binary codes, though multi-state codes are also used. The following example is selected from <span class="citation">Goldstein (<a href="#ref-goldstein2020" role="doc-biblioref">2020</a>)</span>’s analysis of Indo-Hittite phylogeny. Features by convention are abbreviated or coded, with detailed descriptions of each feature kept in a separate file. For instance, P4 here refers to lenition of stops after long vowels and unstressed vowels (only) <span class="citation">(<a href="#ref-goldstein2020" role="doc-biblioref">Goldstein 2020</a>)</span>. For each trait, 0 means absence, 1 presence, and ? uncertain or missing data (the data could be either 0 or 1 in this case).</p>
+<table>
+<thead>
+<tr class="header">
+<th align="center">Trait</th>
+<th align="center">Hittite</th>
+<th align="center">Armenian</th>
+<th align="center">Greek</th>
+<th align="center">Albanian</th>
+<th align="center">Tocharian B</th>
+<th align="center">…</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center">P1-01</td>
+<td align="center">?</td>
+<td align="center">1</td>
+<td align="center">1</td>
+<td align="center">1</td>
+<td align="center">1</td>
+<td align="center">…</td>
+</tr>
+<tr class="even">
+<td align="center">P1-02</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">…</td>
+</tr>
+<tr class="odd">
+<td align="center">P2</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">…</td>
+</tr>
+<tr class="even">
+<td align="center">P3</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">…</td>
+</tr>
+<tr class="odd">
+<td align="center">P4</td>
+<td align="center">0</td>
+<td align="center">1</td>
+<td align="center">1</td>
+<td align="center">1</td>
+<td align="center">1</td>
+<td align="center">…</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="data-format" class="section level3 hasAnchor" number="2.2.2">
+<h3><span class="header-section-number">2.2.2</span> Data format<a href="bascis.html#data-format" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>When linguists compile the dataset, it is fine to have multiple values per cell (table 1) or keep a (horizontally) long spreadsheet (table 2). However, data formats presented above are not ideal for statistical analysis or replication. In recent years, a suite of methods and tools become available, to help linguist curate and explore data following the state-of-the-art guidelines. <a href="http://lingpy.org/index.html">LingPy</a> is a set of Python modules for a wide range of quantitative analyses in historical linguistics, including phonetic alignment, automatic cognate detection, and other toolkit to curate lexical data <span class="citation">(<a href="#ref-list2016" role="doc-biblioref">List and Forkel 2016</a>)</span>. <a href="https://cldf.clld.org/">Cross-Linguistic Data Formats (CLDF)</a> is purposed to establish guidelines of data and coding format to promote replicability <span class="citation">(<a href="#ref-forkel2018" role="doc-biblioref">Forkel et al. 2018</a>)</span>.</p>
+<p>CLDF suggests that (vertically) long table with one value per cell is more interpretable and suitable for computational analysis. As shown in the tables below, <em>Language</em> and <em>Feature</em> could be repeated multiple times; value is assigned to one language per feature. Apart from these three parameters, linguists often add additional columns to indicate sources where they obtain the features and values to ease replication.</p>
+<table>
+<thead>
+<tr class="header">
+<th align="center">Language_ID</th>
+<th align="center">Feature</th>
+<th align="center">Feature_ID</th>
+<th align="center">Value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center">Sepa</td>
+<td align="center">“one”</td>
+<td align="center">1</td>
+<td align="center">1</td>
+</tr>
+<tr class="even">
+<td align="center">Manam</td>
+<td align="center">“one”</td>
+<td align="center">1</td>
+<td align="center">1</td>
+</tr>
+<tr class="odd">
+<td align="center">Kairiru</td>
+<td align="center">“one”</td>
+<td align="center">1</td>
+<td align="center">1</td>
+</tr>
+<tr class="even">
+<td align="center">Sera</td>
+<td align="center">“one”</td>
+<td align="center">1</td>
+<td align="center">2</td>
+</tr>
+<tr class="odd">
+<td align="center">Sepa</td>
+<td align="center">“two”</td>
+<td align="center">2</td>
+<td align="center">3</td>
+</tr>
+<tr class="even">
+<td align="center">Manam</td>
+<td align="center">“two”</td>
+<td align="center">2</td>
+<td align="center">3</td>
+</tr>
+<tr class="odd">
+<td align="center">Kairiru</td>
+<td align="center">“two”</td>
+<td align="center">2</td>
+<td align="center">4</td>
+</tr>
+<tr class="even">
+<td align="center">Sera</td>
+<td align="center">“two”</td>
+<td align="center">2</td>
+<td align="center">5</td>
+</tr>
+<tr class="odd">
+<td align="center">…</td>
+<td align="center">…</td>
+<td align="center">…</td>
+<td align="center">…</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr class="header">
+<th align="center">Language_ID</th>
+<th align="center">Feature</th>
+<th align="center">Feature_ID</th>
+<th align="center">Value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center">Hittite</td>
+<td align="center">P1-01</td>
+<td align="center">1</td>
+<td align="center">?</td>
+</tr>
+<tr class="even">
+<td align="center">Armenian</td>
+<td align="center">P1-01</td>
+<td align="center">1</td>
+<td align="center">1</td>
+</tr>
+<tr class="odd">
+<td align="center">Greek</td>
+<td align="center">P1-01</td>
+<td align="center">1</td>
+<td align="center">1</td>
+</tr>
+<tr class="even">
+<td align="center">Albanian</td>
+<td align="center">P1-01</td>
+<td align="center">1</td>
+<td align="center">1</td>
+</tr>
+<tr class="odd">
+<td align="center">Tocharian B</td>
+<td align="center">P1-01</td>
+<td align="center">1</td>
+<td align="center">1</td>
+</tr>
+<tr class="even">
+<td align="center">Hittite</td>
+<td align="center">P1-02</td>
+<td align="center">2</td>
+<td align="center">0</td>
+</tr>
+<tr class="odd">
+<td align="center">Armenian</td>
+<td align="center">P1-02</td>
+<td align="center">2</td>
+<td align="center">0</td>
+</tr>
+<tr class="even">
+<td align="center">Greek</td>
+<td align="center">P1-02</td>
+<td align="center">2</td>
+<td align="center">0</td>
+</tr>
+<tr class="odd">
+<td align="center">Albanian</td>
+<td align="center">P1-02</td>
+<td align="center">2</td>
+<td align="center">0</td>
+</tr>
+<tr class="even">
+<td align="center">Tocharian B</td>
+<td align="center">P1-02</td>
+<td align="center">2</td>
+<td align="center">0</td>
+</tr>
+<tr class="odd">
+<td align="center">…</td>
+<td align="center">…</td>
+<td align="center">…</td>
+<td align="center">…</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="databases-and-resources" class="section level2 hasAnchor" number="2.3">
+<h2><span class="header-section-number">2.3</span> Databases and resources<a href="bascis.html#databases-and-resources" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="data-scarcity" class="section level3 hasAnchor" number="2.3.1">
+<h3><span class="header-section-number">2.3.1</span> Data scarcity<a href="bascis.html#data-scarcity" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>No matter what linguistic trait is selected, size always matters. Bayesian phylogenetics is after all a statistical method, which requires a significant amount of data to perform well. Well-curated data is scarce. In their searching for phonological and morphological features, <span class="citation">Ringe, Warnow, and Taylor (<a href="#ref-ringe2002" role="doc-biblioref">2002</a>)</span> found that many of them are either poorly curated or poorly understood. Lexical data, on the other hand, is only impressionistically sufficient but rather limited for isolates or languages undergoing substantial phonological and semantic shifts. In their reconstruction of Sahul, <span class="citation">Reesink, Singer, and Dunn (<a href="#ref-reesink2009" role="doc-biblioref">2009</a>)</span> notes that lexical characters are simply not available; their reconstruction is thus based on typological traits.</p>
+</div>
+<div id="available-resources" class="section level3 hasAnchor" number="2.3.2">
+<h3><span class="header-section-number">2.3.2</span> Available resources<a href="bascis.html#available-resources" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>An increasing number of open-source linguistic databases have been released for both comparative method and computational phylogenetic research. The list below includes databases widely used in research.</p>
+<p>Lexical data:</p>
+<ol style="list-style-type: decimal">
+<li><a href="https://www.shh.mpg.de/dlce-research-projects/ie-cor-database">Indo-European Lexical Cognacy Database</a>: the database is currently not available (accessed May 05, 2022). An earlier version is accessible at <a href="https://zenodo.org/record/5556801#.YntE5PPMKqA">this link</a>.</li>
+<li><a href="https://abvd.shh.mpg.de/austronesian/">Austronesian Basic Vocabulary Database</a> <span class="citation">(<a href="#ref-greenhill2008" role="doc-biblioref">Greenhill, Blust, and Gray 2008</a>)</span></li>
+<li><a href="https://scholarspace.manoa.hawaii.edu/handle/10125/24685">Contemporary and Historical Resources for the Indigenous Languages of Australia (Chirila)</a> <span class="citation">(<a href="#ref-bowern2016" role="doc-biblioref">Bowern 2016</a>)</span></li>
+</ol>
+<p>Phonological data:</p>
+<ol style="list-style-type: decimal">
+<li><a href="https://phoible.org/">PHOIBLE</a></li>
+</ol>
+<p>Morpho-syntactic / Typological data:</p>
+<ol style="list-style-type: decimal">
+<li><a href="https://wals.info/">World Atlas of Language Structure (WALS)</a></li>
+<li><a href="https://www.autotyp.uzh.ch/">AUTOTYP</a> <span class="citation">(<a href="#ref-AUTOTYP" role="doc-biblioref">Bickel et al. 2022</a>)</span></li>
+<li><a href="http://sswl.railsplayground.net/">Syntactic Structures of the World’s Languages</a></li>
+</ol>
+<p>Genealogical data:</p>
+<ol style="list-style-type: decimal">
+<li><a href="https://glottolog.org/">Glottlog</a> <span class="citation">(<a href="#ref-hammarstrom2014" role="doc-biblioref">Hammarström et al. 2014</a>)</span></li>
+<li><a href="https://www.ethnologue.com">Ethnologue</a> <span class="citation">(<a href="#ref-lewis2009" role="doc-biblioref">Lewis 2009</a>)</span></li>
+</ol>
+
+</div>
+</div>
+</div>
+<h3>References<a href="references.html#references" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-AUTOTYP" class="csl-entry">
+Bickel, Balthasar, Johanna Nichols, Taras Zakharko, Alena Witzlack-Makarevich, Kristine Hildebrandt, Michael Rießler, Lennart Bierkandt, Fernando Zúñiga, and John B Lowe. 2022. <span>“The AUTOTYP Database (V1.0.1).”</span> <a href="https://doi.org/10.5281/zenodo.6255206">https://doi.org/10.5281/zenodo.6255206</a>.
+</div>
+<div id="ref-bowern2016" class="csl-entry">
+Bowern, Claire. 2016. <span>“Chirila: Contemporary and Historical Resources for the Indigenous Languages of Australia.”</span> <em>Language Documentation &amp; Conservation</em> 10: 1–44.
+</div>
+<div id="ref-chang2015" class="csl-entry">
+Chang, Will, David Hall, Chundra Cathcart, and Andrew Garrett. 2015. <span>“Ancestry-Constrained Phylogenetic Analysis Supports the Indo-European Steppe Hypothesis.”</span> <em>Language</em>, 194–244.
+</div>
+<div id="ref-forkel2018" class="csl-entry">
+Forkel, Robert, Johann-Mattis List, Simon J Greenhill, Christoph Rzymski, Sebastian Bank, Michael Cysouw, Harald Hammarström, Martin Haspelmath, Gereon A Kaiping, and Russell D Gray. 2018. <span>“Cross-Linguistic Data Formats, Advancing Data Sharing and Re-Use in Comparative Linguistics.”</span> <em>Scientific Data</em> 5 (1): 1–10.
+</div>
+<div id="ref-goldstein2020" class="csl-entry">
+Goldstein, David. 2020. <span>“Indo-European Phylogenetics with r: A Tutorial Introduction.”</span> <em>Indo-European Linguistics</em> 8 (1): 110–80.
+</div>
+<div id="ref-greenhill2008" class="csl-entry">
+Greenhill, Simon J, Robert Blust, and Russell D Gray. 2008. <span>“The Austronesian Basic Vocabulary Database: From Bioinformatics to Lexomics.”</span> <em>Evolutionary Bioinformatics</em> 4: EBO–S893.
+</div>
+<div id="ref-greenhill2020" class="csl-entry">
+Greenhill, Simon J, Paul Heggarty, and Russell D Gray. 2020. <span>“Bayesian Phylolinguistics.”</span> <em>The Handbook of Historical Linguistics</em> 2: 226–53.
+</div>
+<div id="ref-hammarstrom2014" class="csl-entry">
+Hammarström, Harald, Robert Forkel, Martin Haspelmath, and Sebastian Nordhoff. 2014. <span>“Glottolog 2.3. Leipzig: Max Planck Institute for Evolutionary Anthropology.”</span> <a href="http://glottolog.org">http://glottolog.org</a>.
+</div>
+<div id="ref-haspelmath2005" class="csl-entry">
+Haspelmath, Martin, Matthew S Dryer, David Gil, and Bernard Comrie. 2005. <em>The World Atlas of Language Structures</em>. OUP Oxford.
+</div>
+<div id="ref-lewis2009" class="csl-entry">
+Lewis, M Paul. 2009. <em>Ethnologue: Languages of the World</em>. SIL international.
+</div>
+<div id="ref-list2016" class="csl-entry">
+List, Johann-Mattis, and Robert Forkel. 2016. <span>“LingPy. A Python Library for Historical Linguistics.”</span> <em>Max Planck Institute for the Science of Human History: Jena</em>.
+</div>
+<div id="ref-nichols2008" class="csl-entry">
+Nichols, Johanna, and Tandy Warnow. 2008. <span>“Tutorial on Computational Linguistic Phylogeny.”</span> <em>Language and Linguistics Compass</em> 2 (5): 760–820.
+</div>
+<div id="ref-reesink2009" class="csl-entry">
+Reesink, Ger, Ruth Singer, and Michael Dunn. 2009. <span>“Explaining the Linguistic Diversity of Sahul Using Population Models.”</span> <em>PLoS Biology</em> 7 (11): e1000241.
+</div>
+<div id="ref-ringe2002" class="csl-entry">
+Ringe, Don, Tandy Warnow, and Ann Taylor. 2002. <span>“Indo-European and Computational Cladistics.”</span> <em>Transactions of the Philological Society</em> 100 (1): 59–129.
+</div>
+</div>
+<div class="footnotes">
+<hr />
+<ol start="5">
+<li id="fn5"><p>Homoplasy is a term originating in biology. See <span class="citation">Chang et al. (<a href="#ref-chang2015" role="doc-biblioref">2015</a>)</span> for an elaboration on linguistic homoplasy<a href="bascis.html#fnref5" class="footnote-back">↩︎</a></p></li>
+<li id="fn6"><p>See <span class="citation">Haspelmath et al. (<a href="#ref-haspelmath2005" role="doc-biblioref">2005</a>)</span> for a survey of well-attested typological features.<a href="bascis.html#fnref6" class="footnote-back">↩︎</a></p></li>
+<li id="fn7"><p>Data is taken from Andrew Garrett’s handout: Phylogeny and Relatedness II.<a href="bascis.html#fnref7" class="footnote-back">↩︎</a></p></li>
+</ol>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="overview.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="implementation.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": "https://github.com/zimine/chl/edit/BRANCH/02-data.Rmd",
+"text": "Edit"
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["_main.pdf", "_main.epub"],
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

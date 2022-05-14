@@ -1,0 +1,17 @@
+rmd table
+
+
+```{r table1}
+knitr::kable(
+  data.frame(
+    "Sepa" = c("teka", "lua", "toli", "wati"), 
+    "Manam" = c("take", "rua", "toli", "wiat"),
+    "Kairiru" = c("tai", "wulu", "tuol", "viat"),
+    "Sera" = c("pontenen", "eltiŋ", "eltiŋ pal", "eltiŋ eltiŋ"),
+    "Gloss" = c("one", "two", "three", "four"),
+    "Coding" = c("1, 1, 1, 2", "3, 3, 4, 5", "6, 6, 6, 7", "8, 8, 8, 9"),
+  ), 
+  caption = "Coding for lexical traits"
+)
+```
+

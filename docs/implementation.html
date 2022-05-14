@@ -1,0 +1,832 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>3 Implementation | Computational Phylogenetics: A Hands-on Tutorial</title>
+  <meta name="description" content="This notebook includes a brief introductory to computational phylogenetics and a tutorial of implementing related methods." />
+  <meta name="generator" content="bookdown 0.26 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="3 Implementation | Computational Phylogenetics: A Hands-on Tutorial" />
+  <meta property="og:type" content="book" />
+  
+  <meta property="og:description" content="This notebook includes a brief introductory to computational phylogenetics and a tutorial of implementing related methods." />
+  <meta name="github-repo" content="https://github.com/zimine/chl" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="3 Implementation | Computational Phylogenetics: A Hands-on Tutorial" />
+  
+  <meta name="twitter:description" content="This notebook includes a brief introductory to computational phylogenetics and a tutorial of implementing related methods." />
+  
+
+<meta name="author" content="Mingyu Yuan" />
+
+
+<meta name="date" content="2022-05-13" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="bascis.html"/>
+<link rel="next" href="references.html"/>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+/* Used with Pandoc 2.11+ new --citeproc when CSL is used */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">Computational Phylogenetics</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Welcome</a></li>
+<li class="chapter" data-level="1" data-path="overview.html"><a href="overview.html"><i class="fa fa-check"></i><b>1</b> Overview</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="overview.html"><a href="overview.html#the-first-wave"><i class="fa fa-check"></i><b>1.1</b> The first wave</a></li>
+<li class="chapter" data-level="1.2" data-path="overview.html"><a href="overview.html#bayesian-phylogenetics"><i class="fa fa-check"></i><b>1.2</b> Bayesian phylogenetics</a></li>
+<li class="chapter" data-level="1.3" data-path="overview.html"><a href="overview.html#other-appraoches"><i class="fa fa-check"></i><b>1.3</b> Other appraoches</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="bascis.html"><a href="bascis.html"><i class="fa fa-check"></i><b>2</b> Bascis</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="bascis.html"><a href="bascis.html#trait-selection"><i class="fa fa-check"></i><b>2.1</b> Trait selection</a>
+<ul>
+<li class="chapter" data-level="2.1.1" data-path="bascis.html"><a href="bascis.html#lexical-traits"><i class="fa fa-check"></i><b>2.1.1</b> Lexical traits</a></li>
+<li class="chapter" data-level="2.1.2" data-path="bascis.html"><a href="bascis.html#typological-traits"><i class="fa fa-check"></i><b>2.1.2</b> Typological traits</a></li>
+</ul></li>
+<li class="chapter" data-level="2.2" data-path="bascis.html"><a href="bascis.html#data-curation"><i class="fa fa-check"></i><b>2.2</b> Data curation</a>
+<ul>
+<li class="chapter" data-level="2.2.1" data-path="bascis.html"><a href="bascis.html#coding-scheme"><i class="fa fa-check"></i><b>2.2.1</b> Coding scheme</a></li>
+<li class="chapter" data-level="2.2.2" data-path="bascis.html"><a href="bascis.html#data-format"><i class="fa fa-check"></i><b>2.2.2</b> Data format</a></li>
+</ul></li>
+<li class="chapter" data-level="2.3" data-path="bascis.html"><a href="bascis.html#databases-and-resources"><i class="fa fa-check"></i><b>2.3</b> Databases and resources</a>
+<ul>
+<li class="chapter" data-level="2.3.1" data-path="bascis.html"><a href="bascis.html#data-scarcity"><i class="fa fa-check"></i><b>2.3.1</b> Data scarcity</a></li>
+<li class="chapter" data-level="2.3.2" data-path="bascis.html"><a href="bascis.html#available-resources"><i class="fa fa-check"></i><b>2.3.2</b> Available resources</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="implementation.html"><a href="implementation.html"><i class="fa fa-check"></i><b>3</b> Implementation</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="implementation.html"><a href="implementation.html#beastling"><i class="fa fa-check"></i><b>3.1</b> BEASTling</a></li>
+<li class="chapter" data-level="3.2" data-path="implementation.html"><a href="implementation.html#phylogeny-of-siouan"><i class="fa fa-check"></i><b>3.2</b> Phylogeny of Siouan</a>
+<ul>
+<li class="chapter" data-level="3.2.1" data-path="implementation.html"><a href="implementation.html#pre-processing"><i class="fa fa-check"></i><b>3.2.1</b> Pre-processing</a></li>
+<li class="chapter" data-level="3.2.2" data-path="implementation.html"><a href="implementation.html#installation"><i class="fa fa-check"></i><b>3.2.2</b> Installation</a></li>
+<li class="chapter" data-level="3.2.3" data-path="implementation.html"><a href="implementation.html#analysis"><i class="fa fa-check"></i><b>3.2.3</b> Analysis</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Computational Phylogenetics: A Hands-on Tutorial</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="implementation" class="section level1 hasAnchor" number="3">
+<h1><span class="header-section-number">3</span> Implementation<a href="implementation.html#implementation" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<div id="beastling" class="section level2 hasAnchor" number="3.1">
+<h2><span class="header-section-number">3.1</span> BEASTling<a href="implementation.html#beastling" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>BEASTling <span class="citation">(<a href="#ref-maurits2017" role="doc-biblioref">Maurits et al. 2017</a>)</span> is a suite of command line tools designed to help linguists generate XML files used for phylogenetic analysis. The program itself does not perform the analysis but instead helps linguists prepare the data in a much more friendly way. BEASTling is designed to be linguist-oriented; it takes in data with CSV formats and produces XML files, which are often lengthy and not easily interpretable. Linguists are able to specify model parameters by editing an configuration file in a straightforward and convenient way, without directly dealing with the BEAST interface. One great advantage of BEASTling lies in its integration with Glottolog. This function would require (1) the data is curated following the format described in the previous section; (2) the data contains an <em>iso</em> column specifying the three-letter ISO code for each language, which could be sourced from Glottolog. The addition of an <em>iso</em> column gives the program a <em>prior</em> that all languages contained in the data belong to a single family <span class="citation">(<a href="#ref-maurits2017" role="doc-biblioref">Maurits et al. 2017</a>)</span>. BEASTling provides an official <a href="https://beastling.readthedocs.io/en/latest/tutorial.html">tutorial</a> of analyzing the phylogeny of Indo-European languages with cognate sets. This tutorial uses typological traits to investigate the phylogeny of Siouan languages.</p>
+</div>
+<div id="phylogeny-of-siouan" class="section level2 hasAnchor" number="3.2">
+<h2><span class="header-section-number">3.2</span> Phylogeny of Siouan<a href="implementation.html#phylogeny-of-siouan" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Siouan is a language family of North America; see the figure below for geograpgical information of selected Siouan languages. Edwin Ko presented a Bayesian phylogenetics analysis of 16 Siouan languages, implemented with BEAST 2 <span class="citation">(<a href="#ref-ko2021" role="doc-biblioref">Ko 2021</a>)</span> (see slides <a href="http://eddersko.com/assets/KoSCLC41Slides.pdf">here</a>). <span class="citation">Ko (<a href="#ref-ko2021" role="doc-biblioref">2021</a>)</span> manually coded altogether 258 typological features.</p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-1"></span>
+<img src="images/siouan.png" alt="Map of selected Siouan languages (Ko, 2021)." width="80%" />
+<p class="caption">
+Figure 3.1: Map of selected Siouan languages (Ko, 2021).
+</p>
+</div>
+<div id="pre-processing" class="section level3 hasAnchor" number="3.2.1">
+<h3><span class="header-section-number">3.2.1</span> Pre-processing<a href="implementation.html#pre-processing" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>The CSV file Edwin shared contains <strong>15</strong> languages (without loway-Oto) and a total <strong>248</strong> features (access the file <a href="%22./data/typological_siouan-12_12_21.csv%22">here</a>). The original CSV is a wide table with every column corresponding to one feature and every row one language (see the table below).</p>
+<table>
+<thead>
+<tr class="header">
+<th align="center">Language</th>
+<th align="center">Feature 1</th>
+<th align="center">Feature 2</th>
+<th align="center">Feature 3</th>
+<th align="center">Feature 4</th>
+<th align="center">…</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center">Crow</td>
+<td align="center">1</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">…</td>
+</tr>
+<tr class="even">
+<td align="center">Hidatsa</td>
+<td align="center">1</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">…</td>
+</tr>
+<tr class="odd">
+<td align="center">Mandan</td>
+<td align="center">1</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">…</td>
+</tr>
+<tr class="even">
+<td align="center">Lakota</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">1</td>
+<td align="center">…</td>
+</tr>
+<tr class="odd">
+<td align="center">Dakota</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">1</td>
+<td align="center">…</td>
+</tr>
+<tr class="even">
+<td align="center">Assiniboine</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">1</td>
+<td align="center">…</td>
+</tr>
+<tr class="odd">
+<td align="center">Stoney</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">1</td>
+<td align="center">0</td>
+<td align="center">…</td>
+</tr>
+<tr class="even">
+<td align="center">Chiwere</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">1</td>
+<td align="center">…</td>
+</tr>
+<tr class="odd">
+<td align="center">Hochunk</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">1</td>
+<td align="center">…</td>
+</tr>
+<tr class="even">
+<td align="center">Osage</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">1</td>
+<td align="center">…</td>
+</tr>
+<tr class="odd">
+<td align="center">Omaha</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">1</td>
+<td align="center">…</td>
+</tr>
+<tr class="even">
+<td align="center">Quapaw</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">1</td>
+<td align="center">…</td>
+</tr>
+<tr class="odd">
+<td align="center">Tutelo</td>
+<td align="center">0</td>
+<td align="center">1</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">…</td>
+</tr>
+<tr class="even">
+<td align="center">Biloxi</td>
+<td align="center">1</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">…</td>
+</tr>
+<tr class="odd">
+<td align="center">Ofo</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">1</td>
+<td align="center">0</td>
+<td align="center">…</td>
+</tr>
+</tbody>
+</table>
+<p>We first reshape the table and turn it into the expected data format. In the converted table below, we assign each feature an ID (see slide 43 through 48 for a list of features used in the original analysis<a href="#fn8" class="footnote-ref" id="fnref8"><sup>8</sup></a>). We retrieve ISO code for each language through an R package <a href="https://ropensci.github.io/lingtypology/index.html"><em>lingtypology</em></a> <span class="citation">(<a href="#ref-moroz2017" role="doc-biblioref">Moroz 2017</a>)</span>, which connects R with Glottolog (V.4.4)<span class="citation">(<a href="#ref-hammarstrom2014" role="doc-biblioref">Hammarström et al. 2014</a>)</span>. The .R file used to do data conversion can be accessed <a href="%22./data/siouan.R%22">here</a>. Lingtypology retrives data from an earlier version of Glottolog (the latest is v.4.5). ISO codes for <em>Hochunk</em>, <em>Omaha</em>, and <em>Chiwere</em>, which are not avilable in this earlier version, have to be manually added. It should be noted that the header or column names are not arbitrary. For BEAST to identify the language family, the header of ISO and language column must be <em>iso</em> and <em>language</em> respectively. Alternatively, we can also keep the ISO code in a separate file called <em>siouan_code.csv</em>.</p>
+<table>
+<thead>
+<tr class="header">
+<th align="center">iso</th>
+<th align="center">language</th>
+<th align="center">feature</th>
+<th align="center">value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center">cro</td>
+<td align="center">Crow</td>
+<td align="center">1</td>
+<td align="center">1</td>
+</tr>
+<tr class="even">
+<td align="center">hid</td>
+<td align="center">Hidatsa</td>
+<td align="center">1</td>
+<td align="center">1</td>
+</tr>
+<tr class="odd">
+<td align="center">mhq</td>
+<td align="center">Mandan</td>
+<td align="center">1</td>
+<td align="center">1</td>
+</tr>
+<tr class="even">
+<td align="center">lkt</td>
+<td align="center">Lakota</td>
+<td align="center">1</td>
+<td align="center">0</td>
+</tr>
+<tr class="odd">
+<td align="center">dak</td>
+<td align="center">Dakota</td>
+<td align="center">1</td>
+<td align="center">0</td>
+</tr>
+<tr class="even">
+<td align="center">asb</td>
+<td align="center">Assiniboine</td>
+<td align="center">1</td>
+<td align="center">0</td>
+</tr>
+<tr class="odd">
+<td align="center">sto</td>
+<td align="center">Stoney</td>
+<td align="center">1</td>
+<td align="center">0</td>
+</tr>
+<tr class="even">
+<td align="center">iow</td>
+<td align="center">Chiwere</td>
+<td align="center">1</td>
+<td align="center">0</td>
+</tr>
+<tr class="odd">
+<td align="center">win</td>
+<td align="center">Hochunk</td>
+<td align="center">1</td>
+<td align="center">0</td>
+</tr>
+<tr class="even">
+<td align="center">osa</td>
+<td align="center">Osage</td>
+<td align="center">1</td>
+<td align="center">0</td>
+</tr>
+<tr class="odd">
+<td align="center">oma</td>
+<td align="center">Omaha</td>
+<td align="center">1</td>
+<td align="center">0</td>
+</tr>
+<tr class="even">
+<td align="center">qua</td>
+<td align="center">Quapaw</td>
+<td align="center">1</td>
+<td align="center">0</td>
+</tr>
+<tr class="odd">
+<td align="center">tta</td>
+<td align="center">Tutelo</td>
+<td align="center">1</td>
+<td align="center">0</td>
+</tr>
+<tr class="even">
+<td align="center">bll</td>
+<td align="center">Biloxi</td>
+<td align="center">1</td>
+<td align="center">1</td>
+</tr>
+<tr class="odd">
+<td align="center">ofo</td>
+<td align="center">Ofo</td>
+<td align="center">1</td>
+<td align="center">0</td>
+</tr>
+<tr class="even">
+<td align="center">…</td>
+<td align="center">…</td>
+<td align="center">…</td>
+<td align="center">…</td>
+</tr>
+</tbody>
+</table>
+<p>To proceed, download the <a href="%22./data/%22">data folder</a> directly from the project repository and keep it under the <em>Downloads</em> directory of your computer. The data folder should contain:</p>
+<ol style="list-style-type: decimal">
+<li>The original data: <em>typological_siouan-12_12_21.csv</em></li>
+<li>The reshaped Siouan data with ISO: <em>siouan_converted_iso.csv</em></li>
+<li>The reshaped Siouan data without ISO: <em>siouan_converted.csv</em></li>
+<li>ISO code for each language: <em>siouan_code.csv</em></li>
+<li>The .R code used to do data conversion: <em>siouan_data.R</em></li>
+</ol>
+</div>
+<div id="installation" class="section level3 hasAnchor" number="3.2.2">
+<h3><span class="header-section-number">3.2.2</span> Installation<a href="implementation.html#installation" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div id="install-beast-2-with-java" class="section level4 hasAnchor" number="3.2.2.1">
+<h4><span class="header-section-number">3.2.2.1</span> Install BEAST 2 with Java<a href="implementation.html#install-beast-2-with-java" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p>As previously mentioned, BEASTling interfaces with BEAST 2 through command lines. BEAST 2 can be installed at its <a href="http://www.beast2.org/">homepage</a>; multiple packages are available for installation, depending on operating systems. BEAST 2 requires Java to run; for the purpose of convenience, please install the BEAST 2 with Java.</p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-2"></span>
+<img src="images/java.png" alt="BEAST 2 installation package." width="70%" />
+<p class="caption">
+Figure 3.2: BEAST 2 installation package.
+</p>
+</div>
+<p>If you have downloaded BEAST 2 sucessfully, you should have a folder named BEAST 2.6.X in your <em>Applications</em> folder or any directory you specify. BEAST 2 is a suite of methods and tools. Within the BEAST 2.6.X folder, you should have:</p>
+<ol style="list-style-type: decimal">
+<li>LogCombiner</li>
+<li>TreeAnnotator</li>
+<li>DensiTree</li>
+<li>BEAUti</li>
+<li>AppLaucher</li>
+</ol>
+<p>You can interact with all of these submodules with their GUIs (Graphical User Interfaces). Alternatively, we can call each module using command lines. In this tutorial, we aim to carry out phylogenetic analysis in command lines completely, without interacting with BEAST 2 directly.</p>
+</div>
+<div id="install-beastling" class="section level4 hasAnchor" number="3.2.2.2">
+<h4><span class="header-section-number">3.2.2.2</span> Install Beastling<a href="implementation.html#install-beastling" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p>First, be sure to install Python! See <a href="https://phoenixnap.com/kb/check-python-version">this blog post</a> to check if Python is installed properly on your operating system. BEASTling is written in Python and can be easily installed via <em>pip</em>, which installs and manages python packages. Pip is a built-in function if Python is downloaded from <a href="https://www.python.org/">python.org</a>.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="implementation.html#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># in terminal, check if python and pip are installed</span></span>
+<span id="cb1-2"><a href="implementation.html#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> <span class="at">--version</span></span>
+<span id="cb1-3"><a href="implementation.html#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> <span class="at">-m</span> pip <span class="at">--version</span></span></code></pre></div>
+<p>If set up properly, BEASTling can be easily fetched by calling <em>pip install</em>; run the following line to check if BEASTling is successfully installed.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="implementation.html#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># install beastling using pip</span></span>
+<span id="cb2-2"><a href="implementation.html#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> install beastling</span>
+<span id="cb2-3"><a href="implementation.html#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="implementation.html#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co"># check if beastling is installed</span></span>
+<span id="cb2-5"><a href="implementation.html#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> list <span class="kw">|</span> <span class="fu">grep</span> <span class="at">-F</span> beastling</span></code></pre></div>
+</div>
+<div id="command-line-basics" class="section level4 hasAnchor" number="3.2.2.3">
+<h4><span class="header-section-number">3.2.2.3</span> Command line basics<a href="implementation.html#command-line-basics" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p>Let’s inspect if data is in its expected format. We first need to set up the working directory, which is <em>Downloads</em>, where you keep the <em>data</em> folder previously downloaded from the project repository. In terminal, we use <em>mkdir</em> to create a directory and <em>cd</em> to navigate directories. The following six command line codes should be sufficient for the purpose of this tutorial.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb3-1"><a href="implementation.html#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># create a directory</span></span>
+<span id="cb3-2"><a href="implementation.html#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> NAME_OF_A_DIRECTORY</span>
+<span id="cb3-3"><a href="implementation.html#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="implementation.html#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co"># go to a directory</span></span>
+<span id="cb3-5"><a href="implementation.html#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> PATH</span>
+<span id="cb3-6"><a href="implementation.html#cb3-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-7"><a href="implementation.html#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="co"># go to root directory</span></span>
+<span id="cb3-8"><a href="implementation.html#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> .</span>
+<span id="cb3-9"><a href="implementation.html#cb3-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-10"><a href="implementation.html#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="co"># move up a directory</span></span>
+<span id="cb3-11"><a href="implementation.html#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ..</span>
+<span id="cb3-12"><a href="implementation.html#cb3-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-13"><a href="implementation.html#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="co"># switch to a previous directory</span></span>
+<span id="cb3-14"><a href="implementation.html#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> <span class="at">-</span></span>
+<span id="cb3-15"><a href="implementation.html#cb3-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-16"><a href="implementation.html#cb3-16" aria-hidden="true" tabindex="-1"></a><span class="co"># list all files in the current directory</span></span>
+<span id="cb3-17"><a href="implementation.html#cb3-17" aria-hidden="true" tabindex="-1"></a><span class="fu">ls</span></span></code></pre></div>
+<p>We first go to the data folder; and inspect the first 10 lines of our data using the <em>head</em> command.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb4-1"><a href="implementation.html#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># go to our data folder; windows uses \ backslash</span></span>
+<span id="cb4-2"><a href="implementation.html#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> Downloads/data </span>
+<span id="cb4-3"><a href="implementation.html#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-4"><a href="implementation.html#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co"># take a look at the first 10 lines of our data</span></span>
+<span id="cb4-5"><a href="implementation.html#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span> <span class="at">-10</span> siouan_converted.csv</span>
+<span id="cb4-6"><a href="implementation.html#cb4-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-7"><a href="implementation.html#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="co"># your output should look like this: </span></span>
+<span id="cb4-8"><a href="implementation.html#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="ex">Language_ID,Feature_ID,Value</span></span>
+<span id="cb4-9"><a href="implementation.html#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="ex">Crow,1,1</span></span>
+<span id="cb4-10"><a href="implementation.html#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="ex">Hidatsa,1,1</span></span>
+<span id="cb4-11"><a href="implementation.html#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="ex">Mandan,1,1</span></span>
+<span id="cb4-12"><a href="implementation.html#cb4-12" aria-hidden="true" tabindex="-1"></a><span class="ex">Lakota,1,0</span></span>
+<span id="cb4-13"><a href="implementation.html#cb4-13" aria-hidden="true" tabindex="-1"></a><span class="ex">Dakota,1,0</span></span>
+<span id="cb4-14"><a href="implementation.html#cb4-14" aria-hidden="true" tabindex="-1"></a><span class="ex">Assiniboine,1,0</span></span>
+<span id="cb4-15"><a href="implementation.html#cb4-15" aria-hidden="true" tabindex="-1"></a><span class="ex">Stoney,1,0</span></span>
+<span id="cb4-16"><a href="implementation.html#cb4-16" aria-hidden="true" tabindex="-1"></a><span class="ex">Chiwere,1,0</span></span>
+<span id="cb4-17"><a href="implementation.html#cb4-17" aria-hidden="true" tabindex="-1"></a><span class="ex">Hochunk,1,0</span></span></code></pre></div>
+</div>
+</div>
+<div id="analysis" class="section level3 hasAnchor" number="3.2.3">
+<h3><span class="header-section-number">3.2.3</span> Analysis<a href="implementation.html#analysis" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Only one step away from generating the XML file! We need a configuration file to specify parameters we would like to set up so that BEAST 2 can run the analysis based exactly on the configuration. You can use <em>any</em> text-editing program you would like to use to write the config file; be sure to add the .conf extension to the file. <span class="citation">Ko (<a href="#ref-ko2021" role="doc-biblioref">2021</a>)</span>’s model specification can be divided into three parts:</p>
+<ol style="list-style-type: decimal">
+<li>substitution model</li>
+<li>tree prior</li>
+<li>clock model</li>
+</ol>
+<p>We first run the analysis with a substitution model, then move on to a more sophisticated model with a tree prior and a clock model.</p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-7"></span>
+<img src="images/ko2021parameters.jpeg" alt="BEAST 2 parameter setup (Ko, 2021)." width="100%" />
+<p class="caption">
+Figure 3.3: BEAST 2 parameter setup (Ko, 2021).
+</p>
+</div>
+<div id="understand-the-configuration-file" class="section level4 hasAnchor" number="3.2.3.1">
+<h4><span class="header-section-number">3.2.3.1</span> Understand the configuration file<a href="implementation.html#understand-the-configuration-file" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p>A config file is divided into sections, each is labeled with a name enclosed in the square bracket. Some sections require names; some not. Under each section, we may assign a value to each parameter.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb5-1"><a href="implementation.html#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="ex">[section1</span> <span class="er">(</span><span class="ex">name1</span><span class="kw">)</span><span class="ex">]</span></span>
+<span id="cb5-2"><a href="implementation.html#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="ex">para1</span> = value1</span>
+<span id="cb5-3"><a href="implementation.html#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="ex">para2</span> = value2</span>
+<span id="cb5-4"><a href="implementation.html#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="ex">...</span></span>
+<span id="cb5-5"><a href="implementation.html#cb5-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-6"><a href="implementation.html#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="ex">[section2</span> <span class="er">(</span><span class="ex">name2</span><span class="kw">)</span><span class="ex">]</span></span>
+<span id="cb5-7"><a href="implementation.html#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="ex">para1</span> = value1</span>
+<span id="cb5-8"><a href="implementation.html#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="ex">para2</span> = value2</span>
+<span id="cb5-9"><a href="implementation.html#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="ex">...</span></span>
+<span id="cb5-10"><a href="implementation.html#cb5-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-11"><a href="implementation.html#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="ex">[section3</span> <span class="er">(</span><span class="ex">name3</span><span class="kw">)</span><span class="ex">]</span></span>
+<span id="cb5-12"><a href="implementation.html#cb5-12" aria-hidden="true" tabindex="-1"></a><span class="ex">para1</span> = value1</span>
+<span id="cb5-13"><a href="implementation.html#cb5-13" aria-hidden="true" tabindex="-1"></a><span class="ex">para2</span> = value2</span>
+<span id="cb5-14"><a href="implementation.html#cb5-14" aria-hidden="true" tabindex="-1"></a><span class="ex">...</span></span></code></pre></div>
+<p>BEASTling supports parameter specification of 7 different sections. We do not have to specify each parameter for each section. Most of them have default values that we do not want to change. For the purpose of this tutorial, we tweak parameters included in the first five sections.</p>
+<ol style="list-style-type: decimal">
+<li>admin section: interface with Glottlog and BEAST 2</li>
+<li>MCMC section: MCMC-related model specification</li>
+<li>languages section: language-related parameters and interface with geneological information from Glottolog</li>
+<li>model section: model selection</li>
+<li>clock section: calibrations of the model section</li>
+<li>geography section: interface with geographical information from Glottolog</li>
+<li>geo_priors section: calibrations of the geography section</li>
+</ol>
+</div>
+<div id="write-your-configuration-file" class="section level4 hasAnchor" number="3.2.3.2">
+<h4><span class="header-section-number">3.2.3.2</span> Write your configuration file<a href="implementation.html#write-your-configuration-file" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p>A basic or minimal config file requires a model section only; others could be omitted. In the model section, we at least need to specify which model we would like to use and the path to the data. It should be noted that we <em>must</em> give our model a name. We select models depending on data types. In our case, typological traits are coded in the binary format. BEASTling supports two binary <em>substitution models</em>—Binary CTMC<a href="#fn9" class="footnote-ref" id="fnref9"><sup>9</sup></a> and Binary Covarion, both of them are widely used in the literature, e.g., <span class="citation">Bouckaert et al. (<a href="#ref-bouckaert2012" role="doc-biblioref">2012</a>)</span>, <span class="citation">Hoffmann et al. (<a href="#ref-hoffmann2021" role="doc-biblioref">2021</a>)</span>. <span class="citation">Ko (<a href="#ref-ko2021" role="doc-biblioref">2021</a>)</span>’s analysis also includes these two models (see figure 3.3).</p>
+<p>The major difference between these two models lies in the transition between states (i.e., absence or presence of a trait). CTMC regulates a fixed rate of transition between states. A language, which might not have a trait (state 0), may evolve to develop this trait (state 1) at some time point, and vice verse. Rate of change is fixed for both directions <span class="citation">(<a href="#ref-hoffmann2021" role="doc-biblioref">Hoffmann et al. 2021</a>)</span>. The covarion model, on the other hand, handles rate of change in a dynamic way, allowing variation in the rates of change <span class="citation">(<a href="#ref-hoffmann2021" role="doc-biblioref">Hoffmann et al. 2021</a>)</span>, which can either be fast or slow, parameterized by <em>f</em> in the figure below. See <span class="citation">Jäger and Wahle (<a href="#ref-jager2021" role="doc-biblioref">2021</a>)</span> for an overview of binary models.</p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-9"></span>
+<img src="images/model.png" alt="Overview of binary models (Hoffman et al. 2021, p.124) (Left: CTMC; Right: Covarion)." width="70%" />
+<p class="caption">
+Figure 3.4: Overview of binary models (Hoffman et al. 2021, p.124) (Left: CTMC; Right: Covarion).
+</p>
+</div>
+<p>It is not neccsarily true that covarion is absolutely better than CTMC; subgrouping is affected by other parameters as well. In fact, <span class="citation">Ko (<a href="#ref-ko2021" role="doc-biblioref">2021</a>)</span>’s analysis shows that CTMC might fit the data better. We can start with a minimal model with CTMC as our model. Lastly, we specify the path to the data. Be sure to add the .conf extension to the file (i.e. siouan_ctmc_basic.conf) and place it under the data folder so that the config file and the data are under the same directory.</p>
+<p>In addition to model selection, we can specify <em>chainlength</em> in MCMC section. The default is ten million steps or iterations of MCMC, which would normally take at least half an hour to run. In our basic model, we first try 50000 steps. Lastly, we add an admin section, specifying that the output XML file should have the name <em>siouan_ctmc_basic</em>. Be sure to delete commented lines if you want to copy and paste the setting below.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb6-1"><a href="implementation.html#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># name the output as siouan_ctmc_basic.xml</span></span>
+<span id="cb6-2"><a href="implementation.html#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="ex">[admin]</span></span>
+<span id="cb6-3"><a href="implementation.html#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="va">basename</span><span class="op">=</span>siouan_ctmc_basic</span>
+<span id="cb6-4"><a href="implementation.html#cb6-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-5"><a href="implementation.html#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="co"># set the number of iterations to 50000</span></span>
+<span id="cb6-6"><a href="implementation.html#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="ex">[MCMC]</span></span>
+<span id="cb6-7"><a href="implementation.html#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="ex">chainlength</span> = 50000</span>
+<span id="cb6-8"><a href="implementation.html#cb6-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-9"><a href="implementation.html#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="co"># select CTMC as our subsitution model; </span></span>
+<span id="cb6-10"><a href="implementation.html#cb6-10" aria-hidden="true" tabindex="-1"></a><span class="co"># provide a path to data</span></span>
+<span id="cb6-11"><a href="implementation.html#cb6-11" aria-hidden="true" tabindex="-1"></a><span class="ex">[model</span> siouan_ctmc_basic]</span>
+<span id="cb6-12"><a href="implementation.html#cb6-12" aria-hidden="true" tabindex="-1"></a><span class="va">model</span><span class="op">=</span>binaryctmc</span>
+<span id="cb6-13"><a href="implementation.html#cb6-13" aria-hidden="true" tabindex="-1"></a><span class="va">data</span><span class="op">=</span>siouan_converted.csv</span></code></pre></div>
+<p>Now we are all set! Open your terminal and tell BEASTling to compile the XML file, which should be generated within a blink.</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb7-1"><a href="implementation.html#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="ex">beastling</span> siouan_ctmc_basic.conf</span></code></pre></div>
+<p>Let’s call BEAST 2 to analyze the XML file! Make sure your BEAST 2 is properly installed. Check your <em>Applications</em> folder to see if a BEAST 2 folder exists. The folder should have a name BEAST 2.6.X, depending on the version of BEAST you have. The latest version BEAST 2.6.7 should be installed if you follow this tutorial. We call BEAST 2 in command lines by accessing the program contained in the folder<a href="#fn10" class="footnote-ref" id="fnref10"><sup>10</sup></a>.</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb8-1"><a href="implementation.html#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="ex">/Applications/BEAST\ 2.6.7/bin/beast</span> siouan_ctmc_basic.xml</span></code></pre></div>
+<p>BEAST 2 should be running now! In the output, you will see developers of BEAST 2, summary of the data, citation of the BEAST 2 program, and lastly posterior calculated from each sample.</p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-13"></span>
+<img src="images/log.png" alt="Log of posterior caculation." width="70%" />
+<p class="caption">
+Figure 3.5: Log of posterior caculation.
+</p>
+</div>
+<p>For this basic model, the iteration process lasts within 20 seconds. When completed, two files are generated:</p>
+<ol style="list-style-type: decimal">
+<li><em>siouan_ctmc_basic.log</em>: a log file, keeping prior, likelihood, and posteriors calculated from each sample.</li>
+<li><em>siouan_ctmc_basic.nex</em>: a nexus file, containing results of the phylogenetic analysis that has been carried out by BEAST 2.</li>
+</ol>
+<p>We can have a birds-eye view of subgrouping by calling <em>DensiTree</em> <span class="citation">(<a href="#ref-bouckaert2014" role="doc-biblioref">Bouckaert and Heled 2014</a>)</span>, which overlays all trees together to give an overview of subgrouping. You can also select to view the consensus tree, which is a collection of representative trees. The figure below shows the consensus tree and all trees side by side.</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb9-1"><a href="implementation.html#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="ex">/Applications/BEAST\ 2.6.7/bin/DensiTree</span> siouan_ctmc_vanilla.nex</span></code></pre></div>
+<p>Congrats! We just generate our very first set of phylogenetic trees. There are a few mismatches between reported trees and ours. First, <em>Osage</em> and <em>Omaha</em> are grouped together. On closer inspection, you would find subgrouping of the first node is not absolutely conclusive. The node probability (0.419) reported in <span class="citation">Ko (<a href="#ref-ko2021" role="doc-biblioref">2021</a>)</span> is not high (left); the DensiTree shown on the right side is also fuzzy. There are two major differences. First, somehow our model believes <em>Hochunk</em> and <em>Chiwere</em> belong to a different subgroup. Second, <em>Biloxi</em>, which should be a member of the Ohio Valley Siouan, separates its lineage with <em>Totelo</em> and <em>Ofo</em>.</p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-15"></span>
+<img src="images/siouan_ctmc_basic_tree.png" alt="Phylogenetic trees of Siouan languages (left: consensus tree; right: all trees.)." width="100%" />
+<p class="caption">
+Figure 3.6: Phylogenetic trees of Siouan languages (left: consensus tree; right: all trees.).
+</p>
+</div>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-16"></span>
+<img src="images/ko2021trees.jpg" alt="Phylogenetic trees of Siouan languages (Ko, 2021)." width="100%" />
+<p class="caption">
+Figure 3.7: Phylogenetic trees of Siouan languages (Ko, 2021).
+</p>
+</div>
+<p>Apart from these basic settings, we could also continue to specify other parameters, not all are suitable for linguistic phylogenetic analysis though. We following <span class="citation">Ko (<a href="#ref-ko2021" role="doc-biblioref">2021</a>)</span>’s analysis to include a <em>tree prior</em> and a <em>clock model</em>. Among available tree priors, the Yule model and the birth death model are more widely cited in linguistic research; others might be more robust in evolutionary biology <span class="citation">(<a href="#ref-hoffmann2021" role="doc-biblioref">Hoffmann et al. 2021</a>)</span>. The major difference between these two models lies in if they assume language extinction. The Yule mode is a pure birth model; which assumes that the dataset contains all the languages in the family and does not allow extinct languages <span class="citation">(<a href="#ref-hoffmann2021" role="doc-biblioref">Hoffmann et al. 2021</a>)</span>. The birth-death model, by definition, allows both extinct and extant languages <span class="citation">(<a href="#ref-hoffmann2021" role="doc-biblioref">Hoffmann et al. 2021</a>)</span>. The dataset we have does contain extinct languages, most of them spoken in Mississippi Valley, including <em>Ofo</em>, <em>Biloxi</em>, and <em>Tutelo</em>. Some of them are nearly extinct, including <em>Mandan</em>, <em>Osage</em>, and <em>Omaha</em>. Ideally, a birth-death model should better capture the evolution process. In reality, we tend to try both models. <span class="citation">Ko (<a href="#ref-ko2021" role="doc-biblioref">2021</a>)</span>’s best model indeed includes a birth-death model; the second best uses a Yule model. In addition to specifying tree priors, we can also tweak substitution model’s (CTMC) rates of change, which could be sampled from a gamma distribution. If a gamma distribution is sliced into four categories<a href="#fn11" class="footnote-ref" id="fnref11"><sup>11</sup></a>, then we will have four different scaling factors. BEAST 2 would average probabilities calculated by applying each factor<a href="#fn12" class="footnote-ref" id="fnref12"><sup>12</sup></a>. Furthermore, we include a <em>clock model</em> to estimate the time depth or age of subgrouping <span class="citation">(<a href="#ref-hoffmann2021" role="doc-biblioref">Hoffmann et al. 2021</a>)</span>. An evolutionary clock is either <em>strict</em> or <em>relaxed</em>. A strict clock assumes that substitution of states occurs at a fixed rate, which would be an average of all substitutions <span class="citation">(<a href="#ref-hoffmann2021" role="doc-biblioref">Hoffmann et al. 2021</a>)</span>. A relaxed clock allows variation in the speed of evolution; some lineage may evolve faster than others <span class="citation">(<a href="#ref-hoffmann2021" role="doc-biblioref">Hoffmann et al. 2021</a>)</span>. The <em>speed</em> of change is again sampled from a distribution, which could logarithmic or a gamma distribution. Here, we would set up a relaxed model, with the speed of change sampled from a log distribution, which is the default setting. Lastly, we increase <em>chainlength</em> or iterations to a reasonably sufficient number; a substantial increase would make the whole process tedious. <span class="citation">Ko (<a href="#ref-ko2021" role="doc-biblioref">2021</a>)</span>’s analysis also includes a 25% burnin, which discards the initial 25% percent of the trees sampled. MCMC typically gets stuck in a low-probability region when searching for an optimal probability; this period of time is considered <em>burnin</em>. Our final config file should look like this:</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb10-1"><a href="implementation.html#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># name the output as siouan_ctmc.xml </span></span>
+<span id="cb10-2"><a href="implementation.html#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="ex">[admin]</span></span>
+<span id="cb10-3"><a href="implementation.html#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="va">basename</span><span class="op">=</span>siouan_ctmc </span>
+<span id="cb10-4"><a href="implementation.html#cb10-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-5"><a href="implementation.html#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="co"># increase the iterations to 5000000 steps</span></span>
+<span id="cb10-6"><a href="implementation.html#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="ex">[MCMC]</span></span>
+<span id="cb10-7"><a href="implementation.html#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="ex">chainlength</span> = 5000000</span>
+<span id="cb10-8"><a href="implementation.html#cb10-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-9"><a href="implementation.html#cb10-9" aria-hidden="true" tabindex="-1"></a><span class="co"># set the tree prior to birth-death model;</span></span>
+<span id="cb10-10"><a href="implementation.html#cb10-10" aria-hidden="true" tabindex="-1"></a><span class="ex">[languages]</span></span>
+<span id="cb10-11"><a href="implementation.html#cb10-11" aria-hidden="true" tabindex="-1"></a><span class="va">tree_prior</span><span class="op">=</span>birthdeath</span>
+<span id="cb10-12"><a href="implementation.html#cb10-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-13"><a href="implementation.html#cb10-13" aria-hidden="true" tabindex="-1"></a><span class="co"># select CTMC as our subsitution model; </span></span>
+<span id="cb10-14"><a href="implementation.html#cb10-14" aria-hidden="true" tabindex="-1"></a><span class="co"># discard first 25% of iterations;</span></span>
+<span id="cb10-15"><a href="implementation.html#cb10-15" aria-hidden="true" tabindex="-1"></a><span class="co"># provide a path to data;</span></span>
+<span id="cb10-16"><a href="implementation.html#cb10-16" aria-hidden="true" tabindex="-1"></a><span class="co"># specify rates of change sampled from a gamma distribution</span></span>
+<span id="cb10-17"><a href="implementation.html#cb10-17" aria-hidden="true" tabindex="-1"></a><span class="ex">[model</span> siouan_ctmc_model]</span>
+<span id="cb10-18"><a href="implementation.html#cb10-18" aria-hidden="true" tabindex="-1"></a><span class="va">model</span><span class="op">=</span>binaryctmc</span>
+<span id="cb10-19"><a href="implementation.html#cb10-19" aria-hidden="true" tabindex="-1"></a><span class="va">log_burnin</span><span class="op">=</span>25</span>
+<span id="cb10-20"><a href="implementation.html#cb10-20" aria-hidden="true" tabindex="-1"></a><span class="va">data</span><span class="op">=</span>siouan_converted.csv</span>
+<span id="cb10-21"><a href="implementation.html#cb10-21" aria-hidden="true" tabindex="-1"></a><span class="va">gamma_categories</span><span class="op">=</span>4</span>
+<span id="cb10-22"><a href="implementation.html#cb10-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-23"><a href="implementation.html#cb10-23" aria-hidden="true" tabindex="-1"></a><span class="co"># include a relaxed clock model</span></span>
+<span id="cb10-24"><a href="implementation.html#cb10-24" aria-hidden="true" tabindex="-1"></a><span class="ex">[clock</span> siouan_ctmc_clock]</span>
+<span id="cb10-25"><a href="implementation.html#cb10-25" aria-hidden="true" tabindex="-1"></a><span class="va">type</span><span class="op">=</span>relaxed</span></code></pre></div>
+<p>We then pass our config file to BEASTling to produce the XML file. BEAST 2 reads in the specification in XML file and generates phylogenetic analysis in a nexus file, which is processed by DensiTree for visualization.</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb11-1"><a href="implementation.html#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="ex">beastling</span> siouan_ctmc.conf</span>
+<span id="cb11-2"><a href="implementation.html#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-3"><a href="implementation.html#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="ex">/Applications/BEAST\ 2.6.7/bin/beast</span> siouan_ctmc.xml</span>
+<span id="cb11-4"><a href="implementation.html#cb11-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-5"><a href="implementation.html#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="ex">/Applications/BEAST\ 2.6.7/bin/DensiTree</span> siouan_ctmc.nex</span></code></pre></div>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-19"></span>
+<img src="images/siouan_ctmc_tree.png" alt="Phylogenetic trees of Siouan languages (left: consensus tree; right: all trees.)." width="100%" />
+<p class="caption">
+Figure 3.8: Phylogenetic trees of Siouan languages (left: consensus tree; right: all trees.).
+</p>
+</div>
+<p>It seems that our new model only slightly improves subgrouping while still mistakenly separates <em>Hochunk</em> and <em>Chiwere</em> from the rest of the members, and <em>Biloxi</em> from Mississippi Valley group. The subgrouping of the Mississippi Valley Siouan is not 100% certain in <span class="citation">Ko (<a href="#ref-ko2021" role="doc-biblioref">2021</a>)</span>’s original analysis, partially because this subgroup has a substantial number of missing data. It should be noted that our data contains <strong>248</strong> out of <strong>258</strong> features used in the original analysis, which might partially accounts for the mismatch here.</p>
+</div>
+<div id="play-with-beast-2-and-other-toolkits" class="section level4 hasAnchor" number="3.2.3.3">
+<h4><span class="header-section-number">3.2.3.3</span> Play with BEAST 2 and other toolkits<a href="implementation.html#play-with-beast-2-and-other-toolkits" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p>In our analysis, ISO code does not really help much since all of our languages belong to the same family; they are monophyletic in nature. If we are dealing with languages from mixed families, specifying which clade some of the languages belong to should be an important prior. Phylogeography, which should be insightful to our analysis, is not working properly in BEASTling. The idea is to make use of the geographical information sourced from Glottolog. BEASTling is able to retrieve latitudes and altitudes from Glottolog (see the following lines, excerpted from the XML file generated by BEASTling) but BEAST 2 raises errors when processing the geographical information.</p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-20"></span>
+<img src="images/siouan_geography.png" alt="Geographical information sourced from Glottolog." width="20%" />
+<p class="caption">
+Figure 3.9: Geographical information sourced from Glottolog.
+</p>
+</div>
+<p>You can further tweak parameters included in BEASTling and explore other modules of BEAST 2. Additionally, you can also interact with other toolkit available in the field of Bayesian phylogenetics. For instance, you can use <a href="http://tree.bio.ed.ac.uk/software/figtree/">FigTree</a> to view clade probability or NeighborNet <span class="citation">(<a href="#ref-bryant2004" role="doc-biblioref">Bryant and Moulton 2004</a>)</span> to inspect if the tree is sufficiently tree-like; some phylogenetic relations resemble more like networks.</p>
+<p>Have fun!</p>
+
+</div>
+</div>
+</div>
+</div>
+<h3>References<a href="references.html#references" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-bouckaert2014" class="csl-entry">
+Bouckaert, Remco, and Joseph Heled. 2014. <span>“DensiTree 2: Seeing Trees Through the Forest.”</span> <em>BioRxiv</em>, 012401.
+</div>
+<div id="ref-bouckaert2012" class="csl-entry">
+Bouckaert, Remco, Philippe Lemey, Michael Dunn, Simon J Greenhill, Alexander V Alekseyenko, Alexei J Drummond, Russell D Gray, Marc A Suchard, and Quentin D Atkinson. 2012. <span>“Mapping the Origins and Expansion of the Indo-European Language Family.”</span> <em>Science</em> 337 (6097): 957–60.
+</div>
+<div id="ref-bryant2004" class="csl-entry">
+Bryant, David, and Vincent Moulton. 2004. <span>“Neighbor-Net: An Agglomerative Method for the Construction of Phylogenetic Networks.”</span> <em>Molecular Biology and Evolution</em> 21 (2): 255–65.
+</div>
+<div id="ref-hammarstrom2014" class="csl-entry">
+Hammarström, Harald, Robert Forkel, Martin Haspelmath, and Sebastian Nordhoff. 2014. <span>“Glottolog 2.3. Leipzig: Max Planck Institute for Evolutionary Anthropology.”</span> <a href="http://glottolog.org">http://glottolog.org</a>.
+</div>
+<div id="ref-hoffmann2021" class="csl-entry">
+Hoffmann, Konstantin, Remco Bouckaert, Simon J Greenhill, and Denise Kühnert. 2021. <span>“Bayesian Phylogenetic Analysis of Linguistic Data Using BEAST.”</span> <em>Journal of Language Evolution</em> 6 (2): 119–35.
+</div>
+<div id="ref-jager2021" class="csl-entry">
+Jäger, Gerhard, and Johannes Wahle. 2021. <span>“Phylogenetic Typology.”</span> <em>Frontiers in Psychology</em>, 2852.
+</div>
+<div id="ref-ko2021" class="csl-entry">
+Ko, Edwin. 2021. <span>“A Bayesian Phylogenetic Study of the Siouan Language Family Using Typological Data.”</span> <a href="http://eddersko.com/assets/KoSCLC41Slides.pdf">http://eddersko.com/assets/KoSCLC41Slides.pdf</a>.
+</div>
+<div id="ref-maurits2017" class="csl-entry">
+Maurits, Luke, Robert Forkel, Gereon A Kaiping, and Quentin D Atkinson. 2017. <span>“BEASTling: A Software Tool for Linguistic Phylogenetics Using BEAST 2.”</span> <em>PloS One</em> 12 (8): e0180908.
+</div>
+<div id="ref-moroz2017" class="csl-entry">
+Moroz, George. 2017. <span>“Lingtypology: Easy Mapping for Linguistic Typology.”</span> <em>URL: Https://CRAN.R-Project.org/Package=lingtypology</em>.
+</div>
+</div>
+<div class="footnotes">
+<hr />
+<ol start="8">
+<li id="fn8"><p>Ideally, description of each feature is detailed in a separate file. It is not clear which 10 of the 258 features are removed from the list.<a href="implementation.html#fnref8" class="footnote-back">↩︎</a></p></li>
+<li id="fn9"><p>Continuous Time Markov Chain.<a href="implementation.html#fnref9" class="footnote-back">↩︎</a></p></li>
+<li id="fn10"><p>You can also use BEAST 2 with multi-threading (2 threads or 4 threads), which should speed up the iteration process: /Applications/BEAST 2.6.7/bin/beast -threads 4 siouan_ctmc_basic.xml<a href="implementation.html#fnref10" class="footnote-back">↩︎</a></p></li>
+<li id="fn11"><p>Four is the default setting.<a href="implementation.html#fnref11" class="footnote-back">↩︎</a></p></li>
+<li id="fn12"><p>See BEAST 2’s <a href="https://taming-the-beast.org/tutorials/Prior-selection/">documentation</a> for more discussions on gamma distribution.<a href="implementation.html#fnref12" class="footnote-back">↩︎</a></p></li>
+</ol>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="bascis.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="references.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": "https://github.com/zimine/chl/edit/BRANCH/03-implementation.Rmd",
+"text": "Edit"
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["_main.pdf", "_main.epub"],
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

@@ -1,0 +1,110 @@
+# Bascis 
+
+## Trait selection
+
+### Lexical traits
+
+Similar to the comparative method, Bayesian phylogenetics rely on lexical, phonological, morphological, syntactic, and typological data to infer linguistic phylogenies. The comparative method often draws inferences from other data types (e.g. sound correspondences or morphological paradigms) as they are more representative, conclusive, and trusted. Bayesian phylogenetics mostly focuses on lexical and/or typological traits. Morphological and phonological traits are often interdependent, thus unsuited for statistical analysis [@chang2015]. The lexicon or vocabulary would often be the first choice when it comes to Bayesian phylogenetics, partly due to data availability issue.  There are three major concerns regarding using lexical traits to infer linguistic phylogeneies. 
+
+First, the term lexical traits is in fact not accurate, neither does cognate set. In a typical cognate set, we would see each slot occupied by lexeme in each language. However, what fed into phylogenetic analysis is not lexeme but cognate relationship with cognacy coded as 0s and 1s in the data. The binary or multi-state matrix might not be fully representative of a cognate set. 
+
+Second, this kind of dataset is often based on *root-meaning traits*, which require shared meanings; the forms or roots can vary. For instance, English *feather* and Latin *penna* share the trait of PIE *\*pet* (*to fly*) but are not cognates as they do not descend from the same word (*feather* > *\*pet-tra* vs. *penna* > *\*pet-na*) [@chang2015]. Cognates, on the other hand, do not necessarily require shared meanings but do require descendance from the common proto-form. For example, English *rain* and German *Regen* are considered cognates because both descend from the proto-Germanic *\*regna* [@greenhill2020]. Motivations underlying cognate traits and root-meaning traits are different. Cognate traits are used to investigate descendance from common ancestral forms, during which semantic shifts may occur, giving rise to cogante words with different meanings. On the other hand, root-meaning traits arise in languages due to multiple reasons. Semantic shift may cause words to have the same meanings but different forms, so does derivational shift—certain roots are well suited to innovate derivatives; and this process may occur independently within language (i.e. homoplasy^[Homoplasy is a term originating in biology. See @chang2015 for an elaboration on linguistic homoplasy]). 
+
+Lastly, selecting cognates based on meanings does not mean any arbitrary semantic units present in the language. Meanings here largely refer to the core vocabulary (i.e. Swadesh list), which is assumed to be universal and consistent across languages and resistant to change. That being said, it is not necessarily true that the core vocabulary is borrowing-free [@greenhill2020]. 
+
+To sum up, lexical traits may be subject to the limitations of core vocabulary and its conversion to binary data. More often is the case that cognate traits and root-meaning traits are mixed in the dataset. Assigning cognacy properly thus becomes the first and biggest question of using lexical traits. 
+
+
+### Typological traits
+
+Typological traits do share the same drawback of being interdependent; however, they could provide us with language-specific information as well as cross-linguistic generalizations. *Typological* traits can be loosely defined as any features relevant to the language's internal structure, for instance, word order and morphosyntactic alignment. Sometimes linguists also extend beyond conventionally defined typological features and include lexico-semantic information. Unlike vocabulary, which is susceptible to borrowing, typological features are believed to be resistant to borrowing. Typological characters are by definition homoplastic [@nichols2008]. They are derived directly from the grammar. The same typological character (e.g. glottalized consonants and tone system) is more likely to evolve independently in each language [@nichols2008]^[See @haspelmath2005 for a survey of well-attested typological features.]. 
+
+
+## Data curation
+
+### Coding scheme
+
+Whatever linguistic traits are selected, they are translated to numbers before being fed into phylogenetic analysis. The following table shows the coding of lexical traits (Coastal Sepik)^[Data is taken from Andrew Garrett's handout: Phylogeny and Relatedness II.]. For instance, if meaning *one* is present in the language, then it will be assigned a number; cognacy is indicated by the same numbers. Sepa, Manam, and Kairiru are coded *1* for this trait, then they would not be assigned to a second number. 
+
+| Sepa | Manam | Kairiru |     Sera    |  Gloss  |   Coding   |
+|:----:|:-----:|:-------:|:-----------:|:-------:|:----------:|
+| teka |  teke |   tai   |   pontenen  |  'one'  | 1, 1, 1, 2 |
+|  lua |  rua  |   wulu  |    eltiŋ    |  'two'  | 3, 3, 4, 5 |
+| toli |  toli |   tuol  |  eltiŋ pal  | 'three' | 6, 6, 6, 7 |
+| wati |  wati |   viat  | eltiŋ eltiŋ |  'four' | 8, 8, 8, 9 |
+
+When it comes to phonological, morphological, and typological features, traits are often translated to binary codes, though multi-state codes are also used. The following example is selected from @goldstein2020's analysis of Indo-Hittite phylogeny. Features by convention are abbreviated or coded, with detailed descriptions of each feature kept in a separate file. For instance, P4 here refers to lenition of stops after long vowels and unstressed vowels (only) [@goldstein2020]. For each trait, 0 means absence, 1 presence, and ? uncertain or missing data (the data could be either 0 or 1 in this case). 
+
+| Trait | Hittite | Armenian | Greek | Albanian | Tocharian B | ... |
+|:-----:|:-------:|:--------:|:-----:|:--------:|:-----------:| :-: |
+| P1-01 |    ?    |     1    |   1   |     1    |      1      | ... |
+| P1-02 |    0    |     0    |   0   |     0    |      0      | ... |
+|   P2  |    0    |     0    |   0   |     0    |      0      | ... |
+|   P3  |    0    |     0    |   0   |     0    |      0      | ... |
+|   P4  |    0    |     1    |   1   |     1    |      1      | ... |
+
+### Data format
+
+When linguists compile the dataset, it is fine to have multiple values per cell (table 1) or keep a (horizontally) long spreadsheet (table 2). However, data formats presented above are not ideal for statistical analysis or replication. In recent years, a suite of methods and tools become available, to help linguist curate and explore data following the state-of-the-art guidelines. [LingPy](http://lingpy.org/index.html) is a set of Python modules for a wide range of quantitative analyses in historical linguistics, including phonetic alignment, automatic cognate detection, and other toolkit to curate lexical data [@list2016]. [Cross-Linguistic Data Formats (CLDF)](https://cldf.clld.org/) is purposed to establish guidelines of data and coding format to promote replicability [@forkel2018].  
+
+CLDF suggests that (vertically) long table with one value per cell is more interpretable and suitable for computational analysis. As shown in the tables below, *Language* and *Feature* could be repeated multiple times; value is assigned to one language per feature. Apart from these three parameters, linguists often add additional columns to indicate sources where they obtain the features and values to ease replication. 
+
+| Language_ID | Feature | Feature_ID | Value | 
+|:-----------:|:-------:|:----------:|:-----:|
+|     Sepa    |  "one"  |      1     |   1   | 
+|    Manam    |  "one"  |      1     |   1   |  
+|   Kairiru   |  "one"  |      1     |   1   |  
+|     Sera    |  "one"  |      1     |   2   |  
+|     Sepa    |  "two"  |      2     |   3   |   
+|    Manam    |  "two"  |      2     |   3   |   
+|   Kairiru   |  "two"  |      2     |   4   |   
+|     Sera    |  "two"  |      2     |   5   |   
+|     ...     |   ...   |     ...    |  ...  |
+
+| Language_ID | Feature | Feature_ID | Value |  
+|:-----------:|:-------:|:----------:|:-----:|
+|   Hittite   |  P1-01  |      1     |   ?   |  
+|   Armenian  |  P1-01  |      1     |   1   |   
+|    Greek    |  P1-01  |      1     |   1   |   
+|   Albanian  |  P1-01  |      1     |   1   |   
+| Tocharian B |  P1-01  |      1     |   1   |   
+|   Hittite   |  P1-02  |      2     |   0   |   
+|   Armenian  |  P1-02  |      2     |   0   |   
+|    Greek    |  P1-02  |      2     |   0   |   
+|   Albanian  |  P1-02  |      2     |   0   |  
+| Tocharian B |  P1-02  |      2     |   0   |   
+|     ...     |   ...   |     ...    |  ...  | 
+
+
+## Databases and resources 
+
+### Data scarcity 
+
+No matter what linguistic trait is selected, size always matters. Bayesian phylogenetics is after all a statistical method, which requires a significant amount of data to perform well. Well-curated data is scarce. In their searching for phonological and morphological features, @ringe2002 found that many of them are either poorly curated or poorly understood. Lexical data, on the other hand, is only impressionistically sufficient but rather limited for isolates or languages undergoing substantial phonological and semantic shifts. In their reconstruction of Sahul, @reesink2009 notes that lexical characters are simply not available; their reconstruction is thus based on typological traits. 
+
+### Available resources
+
+An increasing number of open-source linguistic databases have been released for both comparative method and computational phylogenetic research. The list below includes databases widely used in research. 
+
+Lexical data:
+
+1. [Indo-European Lexical Cognacy Database](https://www.shh.mpg.de/dlce-research-projects/ie-cor-database): the database is currently not available (accessed May 05, 2022). An earlier version is accessible at [this link](https://zenodo.org/record/5556801#.YntE5PPMKqA). 
+2. [Austronesian Basic Vocabulary Database](https://abvd.shh.mpg.de/austronesian/) [@greenhill2008]
+3. [Contemporary and Historical Resources for the Indigenous Languages of Australia (Chirila)](https://scholarspace.manoa.hawaii.edu/handle/10125/24685) [@bowern2016]
+
+Phonological data:
+
+1. [PHOIBLE](https://phoible.org/)
+
+Morpho-syntactic / Typological data:
+
+1. [World Atlas of Language Structure (WALS)](https://wals.info/)
+2. [AUTOTYP](https://www.autotyp.uzh.ch/) [@AUTOTYP]
+3. [Syntactic Structures of the World’s Languages](http://sswl.railsplayground.net/)
+
+
+Genealogical data: 
+
+1. [Glottlog](https://glottolog.org/) [@hammarstrom2014]
+2. [Ethnologue](https://www.ethnologue.com) [@lewis2009]
+
